@@ -1,0 +1,60 @@
+integrations:
+  cadvisor:
+    docker_only: true
+    enabled: true
+    instance: localhost:8080
+    relabel_configs:
+      - action: replace
+        replacement: integrations/docker
+        target_label: job
+  prometheus_remote_write:
+    - basic_auth:
+        password: eyJrIjoiZDhjNWQxM2Y4ODRhNWExMTBjZTg1ZTE3OTQxNTdhNTU3ZDNmYmQyNCIsIm4iOiJzdGFjay01MTk3MTMtZWFzeXN0YXJ0LXByb20tcHVibGlzaGVyIiwiaWQiOjc4MDc1N30=
+        username: 740213
+      url: https://prometheus-us-central1.grafana.net/api/prom/push
+logs:
+  configs:
+    - clients:
+        - basic_auth:
+            password: eyJrIjoiZDhjNWQxM2Y4ODRhNWExMTBjZTg1ZTE3OTQxNTdhNTU3ZDNmYmQyNCIsIm4iOiJzdGFjay01MTk3MTMtZWFzeXN0YXJ0LXByb20tcHVibGlzaGVyIiwiaWQiOjc4MDc1N30=
+            username: 369076
+          url: https://logs-prod-017.grafana.net/loki/api/v1/push
+      name: integrations
+      positions:
+        filename: /tmp/positions.yaml
+      scrape_configs:
+        - docker_sd_configs:
+            - host: unix:///var/run/docker.sock
+              refresh_interval: 5s
+          job_name: integrations/docker
+          relabel_configs:
+            - action: replace
+              replacement: integrations/docker
+              source_labels:
+                - __meta_docker_container_id
+              target_label: job
+            - action: replace
+              replacement: localhost:8080
+              source_labels:
+                - __meta_docker_container_id
+              target_label: instance
+            - regex: /(.*)
+              source_labels:
+                - __meta_docker_container_name
+              target_label: container
+            - source_labels:
+                - __meta_docker_container_log_stream
+              target_label: stream
+      target_config:
+        sync_period: 10s
+metrics:
+  configs:
+    - name: integrations
+      remote_write:
+        - basic_auth:
+            password: eyJrIjoiZDhjNWQxM2Y4ODRhNWExMTBjZTg1ZTE3OTQxNTdhNTU3ZDNmYmQyNCIsIm4iOiJzdGFjay01MTk3MTMtZWFzeXN0YXJ0LXByb20tcHVibGlzaGVyIiwiaWQiOjc4MDc1N30=
+            username: 740213
+          url: https://prometheus-us-central1.grafana.net/api/prom/push
+  global:
+    scrape_interval: 60s
+  wal_directory: /tmp/grafana-agent-wal

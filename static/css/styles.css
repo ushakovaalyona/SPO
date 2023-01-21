@@ -1,0 +1,15 @@
+h1 { 
+    font-size: 300%; 
+    font-family: Fortuna Gothic FlorishC, Arial, sans-serif; 
+    color:LightPink;
+    text-align:center;
+   }
+   h2 { 
+    font-size: 250%; 
+    font-family: Fortuna Gothic FlorishC, Arial, sans-serif; 
+    color:LightPink;
+    text-align:center;
+   }
+   body{
+   background-color:MediumVioletRed;
+   }
